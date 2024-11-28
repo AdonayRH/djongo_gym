@@ -4,11 +4,27 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title%}GymApp{% endblock %}</title>
-        <link href="{% static 'dist/bundle.css' %}" rel="stylesheet" >
+        <title>{% block title %}GymApp{% endblock %}</title>
+        <link href="{% static 'dist/bundle.css' %}" rel="stylesheet">
     </head>
-    <body>
-        
+    
+    <body style="padding-top: 80px;"> <!-- Aumentamos el padding-top aquí -->
+        <!-- Barra de navegación -->
+        {% block navbar %}
+            {% include 'nav.html' %}
+        {% endblock %}
+
+        <!-- Mostrar mensajes de Django con margen adicional -->
+        {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show mt-1" role="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        <!-- Contenido de la página -->
         {% block content %}
         {% endblock %}
 
