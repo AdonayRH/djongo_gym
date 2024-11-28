@@ -8,21 +8,13 @@
         <link href="{% static 'dist/bundle.css' %}" rel="stylesheet">
     </head>
     
-    <body style="padding-top: 80px;"> <!-- Aumentamos el padding-top aquí -->
+    <body style="padding-top: 80px;"> 
         <!-- Barra de navegación -->
         {% block navbar %}
             {% include 'nav.html' %}
         {% endblock %}
 
-        <!-- Mostrar mensajes de Django con margen adicional -->
-        {% if messages %}
-            <div class="alert alert-success alert-dismissible fade show mt-1" role="alert">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
+       
 
         <!-- Contenido de la página -->
         {% block content %}
