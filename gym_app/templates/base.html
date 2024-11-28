@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ca">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title%}GymApp{% endblock %}</title>
+        <link href="{% static 'dist/bundle.css' %}" rel="stylesheet" >
+    </head>
+    <body>
+        
+        {% block content %}
+        {% endblock %}
+
+        <script src="{% static 'dist/bundle.js' %}"></script>
+    </body>
+</html>
