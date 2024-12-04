@@ -115,7 +115,13 @@ def crear_rutinas(request):
         form = SimpleRutinaForm(request.POST)
         if form.is_valid():
             rutina = form.save()
-            return redirect('rutina_list')
+            #pruebas con redirección home
+            return redirect('home')
     else:
         form = SimpleRutinaForm()
     return render(request, 'crear_rutina.html', {'form': form})
+
+
+def listar_rutinas(request):
+
+    pass

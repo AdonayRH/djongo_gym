@@ -11,7 +11,10 @@
             <ul class="navbar-nav">
                 <!-- Enlace para cerrar sesión -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Tancar Sessió</a>
+                    <a class="nav-link" href="{% url 'logout' %}">Cerrar Sessión</a>
+                    {% if user.role == "trainer" %}
+                    <a class="nav-link" href="{% url 'crear_rutina' %}">Crear rutina</a>
+                    {% endif %}
                 </li>
             </ul>
         </div>
