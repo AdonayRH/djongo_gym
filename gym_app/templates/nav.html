@@ -2,20 +2,32 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
         <!-- Enlace a Inicio -->
-        <a class="navbar-brand" href="{% url 'home' %}">Inici</a>
+        <a class="navbar-brand" href="{% url 'home' %}">Inicio</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-                <!-- Enlace para cerrar sesión -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Cerrar Sessión</a>
-                    {% if user.role == "trainer" %}
-                    <a class="nav-link" href="{% url 'crear_rutina' %}">Crear rutina</a>
+                {% if user.is_authenticated %}
+                    {% if user.is_trainer %}
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="{% url 'rutinas' %}">Rutinas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ejercicios' %}">Ejercicios</a>
+                        </li> -->
                     {% endif %}
-                </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="{% url 'editar_perfil' %}">Editar Perfil</a>
+                    </li> -->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="{% url 'horario' %}">Horario</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

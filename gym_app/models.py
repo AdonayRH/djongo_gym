@@ -3,6 +3,7 @@ from djongo import models
 from bson.objectid import ObjectId
 from django.conf import settings
 
+
 class User(AbstractUser):
     ROLE_CHOICES = [
         ('admin', 'Administrador'),
@@ -38,6 +39,7 @@ class Rutina(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Exercise(models.Model):
     name = models.CharField(max_length=100)

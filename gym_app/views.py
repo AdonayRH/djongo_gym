@@ -3,6 +3,8 @@ from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserLoginForm, SimpleRutinaForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import UpdateView
 
 
 def register(request):
@@ -34,6 +36,7 @@ def register(request):
             messages.error(request, 'Error doing the register. Please fix the errors')
     else:
         form = UserRegistrationForm()
+    
     return render(request, 'register.html', {'form': form})
 
 def user_login(request):
@@ -60,13 +63,29 @@ def user_login(request):
                 if user.check_password(password):
                     login(request, user)
                     messages.success(request, 'Conexión exitosa')
-                    return redirect('home')
+
+                    # Redirigir según el tipo de usuario
+                    if user.role == 'trainer':
+                        # Redirigir al dashboard del entrenador usando namespacae
+                        return redirect('trainer:dashboard')  
+                    elif user.role == 'admin':
+                        return redirect('admin_dashboard') 
+                    elif user.role == 'director':
+                        return redirect('director_dashboard')
+                    else:
+                        return redirect('user_dashboard')  # Redirigir al dashboard del usuario normal
+
             except get_user_model().DoesNotExist:
                 messages.error(request, 'Claves de acceso incorrectas')
     else:
         form = UserLoginForm()
     return render(request, 'login.html', {'form': form})
-    
+
+@login_required
+def user_dashborad(request):
+    return render(request, 'user_dashboard.html')
+
+
 @login_required
 def home(request):
     """
@@ -120,8 +139,3 @@ def crear_rutinas(request):
     else:
         form = SimpleRutinaForm()
     return render(request, 'crear_rutina.html', {'form': form})
-
-
-def listar_rutinas(request):
-
-    pass
