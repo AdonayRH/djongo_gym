@@ -121,6 +121,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+MONGO_URI = 'mongodb://localhost:27017/'
+MONGO_DB_NAME = 'gym_db'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

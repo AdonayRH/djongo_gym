@@ -8,8 +8,10 @@ from django.urls import path, include
 app_name = 'trainer'
 
 urlpatterns = [
-    path('rutines/', views.RutinaListView.as_view(), name='rutina-list'),
-    path('rutines/crear/', views.RutinaCreateView.as_view(), name='rutina-create'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('listar/<str:tipo>/', views.multi_listados, name='multi_listados'),
+    path('crear/rutina/', views.RoutineCreateView, name='crear_rutina'),
+    path('ejercicios/crear/', views.ExerciseCreateView, name='crear_ejercicio'),
+    path('ejercicios/editar/<str:pk>/', views.ExerciseUpdateView, name='editar_ejercicio'),
+    path('ejercicios/eliminar_ejercicio/<int:pk>/', views.ExerciseDeleteView, name='eliminar_ejercicio'), 
 ]
 

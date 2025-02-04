@@ -9,16 +9,49 @@
         <title>{% block title %}GymApp{% endblock %}</title>
         <link href="{% static 'dist/bundle.css' %}" rel="stylesheet">
     </head>
-    
-    <body style="padding-top: 80px;"> 
+    <style>
+
+        /* Establece la estructura de la página */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Asegura que el contenido principal crezca para empujar el footer */
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* Estilos del footer */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+    </style>
+    <body> 
         <!-- Barra de navegación -->
         {% block navbar %}
             {% include 'nav.html' %}
         {% endblock %}
 
         <!-- Contenido de la página -->
-        {% block content %}
-        {% endblock %}
+        <main class="container mt-4">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <!-- Footer -->
+        {% include 'footer.html' %}
 
         <script src="{% static 'dist/bundle.js' %}"></script>
     </body>

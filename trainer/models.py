@@ -48,3 +48,10 @@ class SessioRutina(models.Model):
         db_table = 'sessions_rutina'
         unique_together = ['sala', 'data', 'hora_inici']
 
+class Exercise(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    duration = models.IntegerField(default=0) 
+
+    def __str__(self):
+        return self.name
