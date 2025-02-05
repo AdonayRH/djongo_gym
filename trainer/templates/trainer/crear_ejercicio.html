@@ -18,25 +18,25 @@
                 {% csrf_token %}
                 
                 <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre del Ejercicio</label>
-                    <input type="text" id="nombre" name="nombre" class="form-control" 
+                    <label for="name" class="form-label">Nombre del Ejercicio</label>
+                    <input type="text" id="name" name="name" class="form-control" 
                            placeholder="Introduce el nombre del ejercicio" 
-                           value="{{ ejercicio.nombre|default:'' }}" required>
+                           value="{{ ejercicio.name|default:'' }}" required>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="descripcion" class="form-label">Descripción</label>
-                    <textarea id="descripcion" name="descripcion" class="form-control" rows="4" 
-                              placeholder="Describe el ejercicio" required>{{ ejercicio.descripcion|default:'' }}</textarea>
+                    <label for="description" class="form-label">Descripción</label>
+                    <textarea id="description" name="description" class="form-control" rows="4" 
+                              placeholder="Describe el ejercicio" required>{{ ejercicio.description|default:'' }}</textarea>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="duracion" class="form-label">Duración (minutos)</label>
-                    <select id="duracion" name="duracion" class="form-select" required>
-                        <option value="5" {% if ejercicio.duracion == 5 %}selected{% endif %}>5 minutos</option>
-                        <option value="10" {% if ejercicio.duracion == 10 %}selected{% endif %}>10 minutos</option>
-                        <option value="15" {% if ejercicio.duracion == 15 %}selected{% endif %}>15 minutos</option>
-                        <option value="20" {% if ejercicio.duracion == 20 %}selected{% endif %}>20 minutos</option>
+                    <label for="duration" class="form-label">Duración (minutos)</label>
+                    <select id="duration" name="duration" class="form-select" required>
+                        <option value="5" {% if ejercicio.duration == 5 %}selected{% endif %}>5 minutos</option>
+                        <option value="10" {% if ejercicio.duration == 10 %}selected{% endif %}>10 minutos</option>
+                        <option value="15" {% if ejercicio.duration == 15 %}selected{% endif %}>15 minutos</option>
+                        <option value="20" {% if ejercicio.duration == 20 %}selected{% endif %}>20 minutos</option>
                     </select>
                 </div>
                 

@@ -1,60 +1,33 @@
 from django import forms
-from .models import Rutina, SessioRutina
-
+from .models import TrainerExercise, TrainerRutina
 class RutinaForm(forms.ModelForm):
     class Meta:
-        model = Rutina
-        fields = ['nom', 'descripcio', 'tipus', 'durada_minuts', 'capacitat_maxima']
+        model = TrainerRutina
+        fields = ['nom', 'descripcio', 'dificultat', 'energia']
+        widgets = {
+            'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Introduce el nombre de la rutina'}),
+            'descripcio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe la rutina'}),
+            'dificultat': forms.Select(attrs={'class': 'form-select'}),
+            'energia': forms.Select(attrs={'class': 'form-select'})
+        }
 
-class SessioRutinaForm(forms.ModelForm):
+class ExerciseForm(forms.ModelForm):
     class Meta:
-        model = SessioRutina
-        fields = ['rutina', 'data', 'hora_inici', 'hora_fi', 'sala']
+        model = TrainerExercise
+        fields = ['name', 'description', 'duration']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Introduce el nombre del ejercicio'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe el ejercicio'}),
+            'duration': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Duración en minutos'})
+        }
 
-from django import forms
-
-class ExerciseForm(forms.Form):
-    nombre = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Introduce el nombre del ejercicio'}),
-        required=True
-    )
-    descripcion = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe el ejercicio'}),
-        required=True
-    )
-    duracion = forms.ChoiceField(
-        choices=[
-            ('5', '5 minutos'),
-            ('10', '10 minutos'),
-            ('15', '15 minutos'),
-            ('20', '20 minutos')
-        ],
-        widget=forms.Select(attrs={'class': 'form-select'}),
-        required=True
-    )
-
-class RoutineForm(forms.Form):
-    nombre = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Introduce el nombre de la rutina'}),
-        required=True
-    )
-    descripcion = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe la rutina'}),
-        required=True
-    )
-    dificultad = forms.ChoiceField(
-        choices=[
-            ('Fácil', 'Fácil'),
-            ('Intermedio', 'Intermedio'),
-            ('Difícil', 'Difícil')
-        ],
-        widget=forms.Select(attrs={'class': 'form-select'}),
-        required=True
-    )
-    entrenador = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del entrenador'}),
-        required=True
-    )
+class RoutineForm(forms.ModelForm):
+    class Meta:
+        model = TrainerRutina
+        fields = ['nom', 'descripcio', 'dificultat', 'energia']
+        widgets = {
+            'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Introduce el nombre de la rutina'}),
+            'descripcio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe la rutina'}),
+            'dificultat': forms.Select(attrs={'class': 'form-select'}),
+            'energia': forms.Select(attrs={'class': 'form-select'})
+        }
