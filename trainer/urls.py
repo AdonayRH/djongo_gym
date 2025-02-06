@@ -11,5 +11,6 @@ urlpatterns = [
     path('ejercicios/editar/<str:pk>/', views.ExerciseUpdateView, name='editar_ejercicio'),
     path('eliminar/<str:tipo>/<str:pk>/', views.DeleteItemView, name='eliminar_item'),
     path('horario/', views.HorarioView, name='horario'),
+    path('dashboard/', views.DashboardView, name='dashboard'),
 
 ]

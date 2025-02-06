@@ -228,3 +228,34 @@ def HorarioView(request):
         "rutinas": rutinas,
         "dias_semana": dias_semana  # PASAMOS la lista de días al template
     })
+
+@login_required
+def DashboardView(request):
+    if request.method != 'GET':  # Asegura que solo acepte GET
+        return render(request, '403.html', status=403)
+
+    rutinas = TrainerRutina.objects.all()
+    horario = HorarioRutina.objects.all()
+
+    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
+
+    rutina_colores = {
+        str(rutina.id): f"#{hashlib.md5(str(rutina.id).encode()).hexdigest()[:6]}"
+        for rutina in rutinas
+    }
+
+    horario_lista = []
+    for dia in dias_semana:
+        for hora in range(16, 22):
+            entry = horario.filter(dia=dia, hora=hora).first()
+            horario_lista.append({
+                "dia": dia,
+                "hora": hora,
+                "entry": entry,
+                "rutina_color": rutina_colores.get(str(entry.rutina.id), "#cccccc") if entry else "#f8f9fa"
+            })
+
+    return render(request, "trainer/dashboard.html", {
+        "horario_lista": horario_lista,
+        "dias_semana": dias_semana
+    })

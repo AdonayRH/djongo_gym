@@ -25,6 +25,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
                     </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'gym_workouts:subscriptions' %}">Subscripciones</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'gym_workouts:schedule' %}">Rutinas</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>

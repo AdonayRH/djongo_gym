@@ -99,6 +99,9 @@ def home(request):
     Returns:
         HttpResponse: Renderiza la plantilla 'home.html'.
     """
+    # Si el usuario es un entrenador, lo redirige a su dashboard en trainer
+    if request.user.role == 'trainer':
+        return redirect('trainer:dashboard')
     return render(request, 'home.html', {'show_messages': True})
 
 def logout_view(request):

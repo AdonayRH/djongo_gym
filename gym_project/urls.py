@@ -20,5 +20,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('gym_app.urls')),
-    path('trainer/', include('trainer.urls')),
+    path('trainer/', include('trainer.urls', namespace='trainer')),
+    path('gym_workouts/', include('gym_workouts.urls', namespace='gym_workouts')),
+
 ]
