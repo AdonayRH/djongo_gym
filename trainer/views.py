@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from trainer.forms import RoutineForm, ExerciseForm
-from .models import TrainerRutina, TrainerExercise
+from .models import TrainerRutina, TrainerExercise, HorarioRutina
 from bson import ObjectId
+import hashlib
 
 @login_required
 def multi_listados(request, tipo):
@@ -98,7 +99,7 @@ def ExerciseCreateView(request):
 
 @login_required
 def ExerciseUpdateView(request, pk):
-    ejercicio = get_object_or_404(TrainerExercise, pk=pk)
+    ejercicio = get_object_or_404(TrainerExercise, id=ObjectId(pk))
     if request.method == 'POST':
         form = ExerciseForm(request.POST, instance=ejercicio)
         if form.is_valid():
@@ -112,6 +113,51 @@ def ExerciseUpdateView(request, pk):
         form = ExerciseForm(instance=ejercicio)
 
     return render(request, 'trainer/crear_ejercicio.html', {'form': form, 'edit_mode': True})
+
+@login_required
+def RoutineCreateUpdateView(request, pk=None):
+    ejercicios = TrainerExercise.objects.all()
+
+    if pk:
+        try:
+            rutina = get_object_or_404(TrainerRutina, id=int(pk))
+            edit_mode = True
+        except Exception:
+            messages.error(request, "Rutina no encontrada.")
+            return redirect('trainer:multi_listados', tipo='rutinas')
+    else:
+        rutina = None
+        edit_mode = False
+
+    if request.method == 'POST':
+        form = RoutineForm(request.POST, instance=rutina)
+        if form.is_valid():
+            rutina = form.save(commit=False)
+            rutina.save()
+
+            # Asociar los ejercicios seleccionados
+            ejercicios_ids = request.POST.getlist('exercises')
+            rutina.exercises.set(ejercicios_ids)
+            rutina.save()
+
+            if edit_mode:
+                messages.success(request, 'Rutina actualizada exitosamente')
+            else:
+                messages.success(request, 'Rutina creada exitosamente')
+
+            return redirect('trainer:multi_listados', tipo='rutinas')
+        else:
+            print(f'Errores en el formulario: {form.errors}')
+            messages.error(request, 'El formulario no es válido')
+    else:
+        form = RoutineForm(instance=rutina)
+
+    return render(request, 'trainer/crear_rutina.html', {
+        'form': form,
+        'ejercicios': ejercicios,
+        'edit_mode': edit_mode,
+        'rutina': rutina
+    })
 
 @login_required
 def DeleteItemView(request, tipo, pk):
@@ -134,4 +180,51 @@ def DeleteItemView(request, tipo, pk):
     return render(request, 'trainer/eliminar_item.html', {
         'item': item,
         'tipo': tipo
+    })
+
+@login_required
+def HorarioView(request):
+    rutinas = TrainerRutina.objects.all()
+    horario = HorarioRutina.objects.all()
+
+    # Lista de días de la semana
+    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
+
+    # Crear un diccionario de colores basado en el ID de la rutina
+    rutina_colores = {
+        str(rutina.id): f"#{hashlib.md5(str(rutina.id).encode()).hexdigest()[:6]}"
+        for rutina in rutinas
+    }
+
+    # Crear una lista de horarios con estructura más simple
+    horario_lista = []
+    for dia in dias_semana:
+        for hora in range(16, 22):
+            entry = horario.filter(dia=dia, hora=hora).first()
+            horario_lista.append({
+                "dia": dia,
+                "hora": hora,
+                "entry": entry,
+                "rutina_color": rutina_colores.get(str(entry.rutina.id), "#cccccc") if entry else "#cccccc"
+            })
+
+    if request.method == "POST":
+        dia = request.POST.get("dia")
+        hora = int(request.POST.get("hora"))
+        rutina_id = request.POST.get("rutina_id")
+
+        if not rutina_id:
+            HorarioRutina.objects.filter(dia=dia, hora=hora).delete()
+            messages.success(request, "Rutina eliminada.")
+        else:
+            rutina = get_object_or_404(TrainerRutina, id=int(rutina_id))
+            HorarioRutina.objects.update_or_create(dia=dia, hora=hora, defaults={"rutina": rutina})
+            messages.success(request, "Rutina programada correctamente.")
+
+        return redirect("trainer:horario")
+
+    return render(request, "trainer/horario.html", {
+        "horario_lista": horario_lista,
+        "rutinas": rutinas,
+        "dias_semana": dias_semana  # PASAMOS la lista de días al template
     })

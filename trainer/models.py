@@ -56,4 +56,21 @@ class TrainerRutina(models.Model):
 
     class Meta:
         db_table = 'rutines'
-    
+
+class HorarioRutina(models.Model):
+    _id = models.ObjectIdField(primary_key=True, default=ObjectId)
+    rutina = models.ForeignKey("TrainerRutina", on_delete=models.CASCADE)
+    dia = models.CharField(
+        max_length=10,
+        choices=[
+            ('Lunes', 'Lunes'),
+            ('Martes', 'Martes'),
+            ('Miércoles', 'Miércoles'),
+            ('Jueves', 'Jueves'),
+            ('Viernes', 'Viernes')
+        ]
+    )
+    hora = models.IntegerField(choices=[(16, "16:00"), (17, "17:00"), (18, "18:00"), (19, "19:00"), (20, "20:00"), (21, "21:00")])
+
+    class Meta:
+        unique_together = ['dia', 'hora']
