@@ -3,6 +3,8 @@ from djongo import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from bson import ObjectId
+from datetime import date, timedelta
+
 
 # class SessioRutina(models.Model):
 #     rutina = models.ForeignKey(Rutina, on_delete=models.CASCADE)
@@ -70,7 +72,33 @@ class HorarioRutina(models.Model):
             ('Viernes', 'Viernes')
         ]
     )
-    hora = models.IntegerField(choices=[(16, "16:00"), (17, "17:00"), (18, "18:00"), (19, "19:00"), (20, "20:00"), (21, "21:00")])
+    dia_numero = models.IntegerField()
+    hora = models.IntegerField(choices=[
+        (16, "16:00"), (17, "17:00"), (18, "18:00"), 
+        (19, "19:00"), (20, "20:00"), (21, "21:00")
+    ])
+    inscritos = models.JSONField(default=list)  # Asegurar que es una lista
+
+    def save(self, *args, **kwargs):
+        """Asegurar que inscritos es una lista antes de guardar"""
+        if not isinstance(self.inscritos, list):
+            self.inscritos = []  # Reiniciar como lista si no lo es
+        super().save(*args, **kwargs)
+
+    def inscribir_usuario(self, user_id):
+        """Añade un usuario a la lista de inscritos si no está ya inscrito."""
+        user_id_str = str(user_id)
+        if user_id_str not in self.inscritos and len(self.inscritos) < 10:
+            self.inscritos.append(user_id_str)
+            self.save()
+
+    def cancelar_inscripcion(self, user_id):
+        """Elimina un usuario de la lista de inscritos."""
+        user_id_str = str(user_id)
+        if user_id_str in self.inscritos:
+            self.inscritos.remove(user_id_str)
+            self.save()
 
     class Meta:
-        unique_together = ['dia', 'hora']
+        unique_together = ['dia', 'hora', 'dia_numero']
+        db_table = 'trainer_horariorutina'

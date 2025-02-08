@@ -10,6 +10,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
+                    
                     {% if user.role == "trainer" %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'trainer:multi_listados' 'ejercicios' %}">Ejercicios</a>
@@ -20,20 +21,21 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'trainer:horario' %}">Horario</a>
                         </li>
+                    {% elif user.role == "user" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'gym_workouts:subscriptions' %}">Subscripciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'gym_workouts:schedule' %}">Rutinas</a>
+                        </li>
                     {% endif %}
-                   
+
+                    <!-- Logout SIEMPRE al final -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{% url 'gym_workouts:subscriptions' %}">Subscripciones</a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{% url 'gym_workouts:schedule' %}">Rutinas</a>
+                        <a class="nav-link text-danger" href="{% url 'logout' %}">Cerrar Sesión</a>
                     </li>
                 {% endif %}
             </ul>
         </div>
-        
     </div>
 </nav>

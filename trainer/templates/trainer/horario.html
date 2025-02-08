@@ -14,18 +14,19 @@
         <thead class="table-dark">
             <tr>
                 <th>Hora</th>
-                {% for dia in dias_semana %}
-                    <th>{{ dia }}</th>
+                {% for dia, num in dias_disponibles %}
+                    <th>{{ dia }} <br> <span class="badge bg-primary">{{ num }}</span></th>
                 {% endfor %}
             </tr>
         </thead>
+        
         <tbody>
             {% for hora in horario_lista|slice:":6" %}
             <tr>
                 <td><strong>{{ hora.hora }}:00</strong></td>
-                {% for dia in dias_semana %}
+                {% for dia, num in dias_disponibles %}
                     {% for item in horario_lista %}
-                        {% if item.dia == dia and item.hora == hora.hora %}
+                        {% if item.dia == dia and item.dia_numero == num and item.hora == hora.hora %}
                             <td class="text-center" style="position: relative;">
                                 {% if item.entry %}
                                     <div style="background-color: {{ item.rutina_color }}; padding: 10px; border-radius: 5px;">
@@ -33,6 +34,7 @@
                                         <form method="POST" style="display:inline;">
                                             {% csrf_token %}
                                             <input type="hidden" name="dia" value="{{ item.dia }}">
+                                            <input type="hidden" name="dia_numero" value="{{ item.dia_numero }}">
                                             <input type="hidden" name="hora" value="{{ item.hora }}">
                                             <button type="submit" class="btn btn-sm btn-danger">X</button>
                                         </form>
@@ -41,6 +43,7 @@
                                     <form method="POST">
                                         {% csrf_token %}
                                         <input type="hidden" name="dia" value="{{ item.dia }}">
+                                        <input type="hidden" name="dia_numero" value="{{ item.dia_numero }}">
                                         <input type="hidden" name="hora" value="{{ item.hora }}">
                                         <select name="rutina_id" class="form-select form-select-sm" required>
                                             <option value="">Sin programar</option>
@@ -58,6 +61,7 @@
             </tr>
             {% endfor %}
         </tbody>
+        
     </table>
 </div>
 {% endblock %}

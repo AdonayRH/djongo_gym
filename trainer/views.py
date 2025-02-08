@@ -5,6 +5,8 @@ from trainer.forms import RoutineForm, ExerciseForm
 from .models import TrainerRutina, TrainerExercise, HorarioRutina
 from bson import ObjectId
 import hashlib
+from datetime import date, timedelta
+
 
 @login_required
 def multi_listados(request, tipo):
@@ -165,6 +167,8 @@ def DeleteItemView(request, tipo, pk):
         item = get_object_or_404(TrainerExercise, id=ObjectId(pk))
     elif tipo == 'rutina':
         item = get_object_or_404(TrainerRutina, id=ObjectId(pk))
+        # Eliminar solo las instancias de HorarioRutina asociadas a esta rutina considerando día y hora
+        HorarioRutina.objects.filter(rutina=item).delete()
     else:
         messages.error(request, 'Tipo de elemento no válido')
         return redirect('trainer:multi_listados', tipo='ejercicios')
@@ -187,46 +191,71 @@ def HorarioView(request):
     rutinas = TrainerRutina.objects.all()
     horario = HorarioRutina.objects.all()
 
-    # Lista de días de la semana
-    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
+    # Mapeo de días en inglés a español
+    dias_traducidos = {
+        "Monday": "Lunes",
+        "Tuesday": "Martes",
+        "Wednesday": "Miércoles",
+        "Thursday": "Jueves",
+        "Friday": "Viernes"
+    }
 
-    # Crear un diccionario de colores basado en el ID de la rutina
+    # Obtener la fecha actual y avanzar si es fin de semana
+    fecha_actual = date.today()
+    while fecha_actual.weekday() > 4:  # Si es sábado (5) o domingo (6), avanzar al lunes
+        fecha_actual += timedelta(days=1)
+
+    # Crear lista de fechas disponibles
+    fechas_disponibles = []
+    for _ in range(5):  # Mostrar solo 5 días hábiles
+        while fecha_actual.weekday() > 4:  # Saltar sábados y domingos
+            fecha_actual += timedelta(days=1)
+        dia_espanol = dias_traducidos[fecha_actual.strftime('%A')]  # Traducir el día
+        fechas_disponibles.append((dia_espanol, fecha_actual.day))
+        fecha_actual += timedelta(days=1)
+
+    # Diccionario de colores basado en la rutina
     rutina_colores = {
         str(rutina.id): f"#{hashlib.md5(str(rutina.id).encode()).hexdigest()[:6]}"
         for rutina in rutinas
     }
 
-    # Crear una lista de horarios con estructura más simple
+    # Construcción de la lista de horarios
     horario_lista = []
-    for dia in dias_semana:
+    for dia_nombre, dia_num in fechas_disponibles:
         for hora in range(16, 22):
-            entry = horario.filter(dia=dia, hora=hora).first()
+            entry = horario.filter(dia=dia_nombre, dia_numero=dia_num, hora=hora).first()
             horario_lista.append({
-                "dia": dia,
+                "dia": dia_nombre,
+                "dia_numero": dia_num,
                 "hora": hora,
                 "entry": entry,
-                "rutina_color": rutina_colores.get(str(entry.rutina.id), "#cccccc") if entry else "#cccccc"
+                "rutina_color": rutina_colores.get(str(entry.rutina.id), "#cccccc") if entry else "#f8f9fa"
             })
 
+    # Manejar la asignación o eliminación de rutinas
     if request.method == "POST":
         dia = request.POST.get("dia")
+        dia_numero = int(request.POST.get("dia_numero"))
         hora = int(request.POST.get("hora"))
         rutina_id = request.POST.get("rutina_id")
 
         if not rutina_id:
-            HorarioRutina.objects.filter(dia=dia, hora=hora).delete()
+            HorarioRutina.objects.filter(dia=dia, dia_numero=dia_numero, hora=hora).delete()
             messages.success(request, "Rutina eliminada.")
         else:
             rutina = get_object_or_404(TrainerRutina, id=int(rutina_id))
-            HorarioRutina.objects.update_or_create(dia=dia, hora=hora, defaults={"rutina": rutina})
+            HorarioRutina.objects.update_or_create(
+                dia=dia, dia_numero=dia_numero, hora=hora, defaults={"rutina": rutina}
+            )
             messages.success(request, "Rutina programada correctamente.")
 
         return redirect("trainer:horario")
 
     return render(request, "trainer/horario.html", {
         "horario_lista": horario_lista,
-        "rutinas": rutinas,
-        "dias_semana": dias_semana  # PASAMOS la lista de días al template
+        "dias_disponibles": fechas_disponibles,
+        "rutinas": rutinas
     })
 
 @login_required
