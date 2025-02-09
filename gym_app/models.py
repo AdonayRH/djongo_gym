@@ -9,7 +9,7 @@ class User(AbstractUser):
         ('admin', 'Administrador'),
         ('user', 'Usuari del Gimnàs'),
         ('trainer', 'Entrenador'),
-        ('director', 'Director')
+        ('gerente', 'Gerente')
     ]
 
     email = models.EmailField(unique=True)

@@ -95,7 +95,7 @@ def user_login(request):
                 user = get_user_model().objects.get(email=email)
                 if user.check_password(password):
                     login(request, user)
-                    messages.success(request, 'Conexión exitosa')
+                    messages.success(request, 'Inicio de sesión exitoso!')
 
                     # Redirigir según el tipo de usuario
                     if user.role == 'trainer':
@@ -106,7 +106,7 @@ def user_login(request):
                     elif user.role == 'director':
                         return redirect('director_dashboard')
                     else:
-                        return redirect('user_dashboard')  # Redirigir al dashboard del usuario normal
+                        return redirect('home')  # Redirigir al dashboard del usuario normal
 
             except get_user_model().DoesNotExist:
                 messages.error(request, 'Claves de acceso incorrectas')
