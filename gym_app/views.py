@@ -1,11 +1,44 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout, get_user_model
+from django.contrib.auth import login, authenticate, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserLoginForm, SimpleRutinaForm
+from .forms import UserRegistrationForm, UserLoginForm, SimpleRutinaForm, UserUpdateForm, CustomPasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
 
+@login_required
+def profile_view(request):
+    """Permite al usuario ver y actualizar sus datos personales."""
+
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Tu perfil ha sido actualizado correctamente.")
+            return redirect('profile')
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'profile.html', {'form': form})
+
+
+@login_required
+def change_password(request):
+    """Permite al usuario cambiar su contraseña."""
+
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Mantiene la sesión después del cambio de contraseña
+            messages.success(request, "Tu contraseña ha sido actualizada correctamente.")
+            return redirect('profile')
+        else:
+            messages.error(request, "Hubo un error al cambiar la contraseña. Intenta nuevamente.")
+    else:
+        form = CustomPasswordChangeForm(user=request.user)
+
+    return render(request, 'change_password.html', {'form': form})
 
 def register(request):
     """
