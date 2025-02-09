@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
 
+# namespace de la app
 app_name = 'trainer'
 
+# Rutas del trainer
 urlpatterns = [
     path('listar/<str:tipo>/', views.multi_listados, name='multi_listados'),
     path('crear/rutina/', views.RoutineCreateUpdateView, name='crear_rutina'),

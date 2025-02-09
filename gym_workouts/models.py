@@ -3,6 +3,8 @@ from django.conf import settings
 from datetime import timedelta, date
 from trainer.models import HorarioRutina
 
+
+# Modelo para planes de suscripción
 class SubscriptionPlan(models.Model):
     name = models.CharField(max_length=50, unique=True)
     price = models.FloatField()
@@ -14,6 +16,7 @@ class SubscriptionPlan(models.Model):
     class Meta:
         db_table = "subscription_plans"
 
+# Modelo para la suscripción del usuario
 class UserSubscription(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, null=True, blank=True)  # Permitir que sea opcional
@@ -41,6 +44,7 @@ class UserSubscription(models.Model):
     class Meta:
         db_table = "user_subscriptions"
 
+# Modelo para registrar entrenamientos del usuario
 class UserWorkout(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     session = models.ForeignKey(HorarioRutina, on_delete=models.CASCADE)

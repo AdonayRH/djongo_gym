@@ -4,12 +4,15 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from .forms import AdminUserCreationForm, AdminUserUpdateForm
 
+
 User = get_user_model()
 
+# Función para verificar si el usuario es administrador
 def is_admin(user):
     """Función para verificar si el usuario es administrador"""
     return user.is_authenticated and user.role == 'admin'
 
+# Vista para listar usuarios
 @login_required
 @user_passes_test(is_admin)
 def user_list(request):
@@ -17,6 +20,7 @@ def user_list(request):
     users = User.objects.all()
     return render(request, 'admin_gym/user_list.html', {'users': users})
 
+# Vista para crear un usuario
 @login_required
 @user_passes_test(is_admin)
 def create_user(request):
@@ -32,6 +36,7 @@ def create_user(request):
 
     return render(request, 'admin_gym/create_user.html', {'form': form})
 
+# Vista para actualizar un usuario
 @login_required
 @user_passes_test(is_admin)
 def update_user(request, user_id):
@@ -49,6 +54,7 @@ def update_user(request, user_id):
 
     return render(request, 'admin_gym/update_user.html', {'form': form, 'user': user})
 
+# Vista para eliminar un usuario
 @login_required
 @user_passes_test(is_admin)
 def delete_user(request, user_id):

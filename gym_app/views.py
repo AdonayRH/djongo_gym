@@ -5,6 +5,7 @@ from django.contrib import messages
 from .forms import UserRegistrationForm, UserLoginForm, SimpleRutinaForm, UserUpdateForm, CustomPasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
+from django.contrib.messages import get_messages
 
 @login_required
 def profile_view(request):
@@ -78,7 +79,7 @@ def user_login(request):
 
     Si la solicitud es POST, verifica las credenciales del usuario. 
     Si son válidas, inicia sesión y redirige al usuario a la página principal.
-    Si las credenciales son incorrectas, muestra un mensaje de error.
+    Si las credenciales son incorrectas, muestra un mensaje de error genérico.
 
     Args:
         request (HttpRequest): Objeto que representa la solicitud HTTP actual.
@@ -91,11 +92,13 @@ def user_login(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
+            
+
             try:
                 user = get_user_model().objects.get(email=email)
                 if user.check_password(password):
                     login(request, user)
-                    messages.success(request, 'Inicio de sesión exitoso!')
+                    messages.success(request, 'Conexión exitosa')
 
                     # Redirigir según el tipo de usuario
                     if user.role == 'trainer':
@@ -150,6 +153,10 @@ def logout_view(request):
         HttpResponseRedirect: Redirige a la página principal ('home').
     """
     logout(request)
+    # Eliminar mensajes de sesión
+    storage = get_messages(request)
+    for message in storage:
+        pass  # Esto obliga a Django a marcar los mensajes como usados
     return redirect('home')
 
 def crear_rutinas(request):

@@ -40,7 +40,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin_gym:create_user' %}">Añadir Usuario</a>
                         </li>
-                    {% elif user.role == "admin" %}
+                    {% elif user.role == "gerente" %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'gerente:user_list' %}">Listado de Usuarios</a>
                         </li>

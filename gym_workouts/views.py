@@ -7,6 +7,7 @@ from trainer.models import  HorarioRutina
 from bson import ObjectId
 from gym_app.models import User
 
+# Subscripción del usuario a los diferentes planes
 @login_required
 def subscriptions_view(request):
     """ Muestra los planes de suscripción y permite elegir uno. """
@@ -29,6 +30,7 @@ def subscriptions_view(request):
 
     return render(request, "gym_workouts/subscriptions.html", {"plans": plans})
 
+# Horario de rutinas en el que el usuario se puede unir
 @login_required
 def schedule_view(request):
     user = request.user

@@ -1,5 +1,7 @@
 from django import forms
 from .models import TrainerExercise, TrainerRutina
+
+# Formulario para crear o editar rutinas
 class RutinaForm(forms.ModelForm):
     class Meta:
         model = TrainerRutina
@@ -11,6 +13,7 @@ class RutinaForm(forms.ModelForm):
             'energia': forms.Select(attrs={'class': 'form-select'})
         }
 
+# Formulario para crear o editar ejercicios
 class ExerciseForm(forms.ModelForm):
     class Meta:
         model = TrainerExercise
@@ -21,6 +24,7 @@ class ExerciseForm(forms.ModelForm):
             'duration': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Duración en minutos'})
         }
 
+# Formulario redundante para rutinas (se puede fusionar con RutinaForm si es el mismo uso)
 class RoutineForm(forms.ModelForm):
     class Meta:
         model = TrainerRutina

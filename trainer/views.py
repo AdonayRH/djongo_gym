@@ -6,8 +6,10 @@ from .models import TrainerRutina, TrainerExercise, HorarioRutina
 from bson import ObjectId
 import hashlib
 from datetime import date, timedelta
+import traceback  # Importar para capturar el detalle del error
 
 
+# Vista para listar ejercicios o rutinas
 @login_required
 def multi_listados(request, tipo):
     if tipo == 'ejercicios':
@@ -26,6 +28,7 @@ def multi_listados(request, tipo):
         'crear_url': crear_url
     })
 
+# Vista para crear una nueva rutina
 @login_required
 def RoutineCreateView(request):
     if request.method == 'POST':
@@ -44,10 +47,11 @@ def RoutineCreateView(request):
         'form': form
     })
 
+# Vista para crear o actualizar una rutina
 @login_required
 def RoutineCreateUpdateView(request, pk=None):
     ejercicios = TrainerExercise.objects.all()
-
+    # Si se proporciona un ID, se obtiene la rutina existente
     if pk:
         rutina = get_object_or_404(TrainerRutina, pk=pk)
     else:
@@ -74,8 +78,8 @@ def RoutineCreateUpdateView(request, pk=None):
         'edit_mode': bool(pk)
     })
 
-import traceback  # Importar para capturar el detalle del error
 
+# Vista para crear un ejercicio
 @login_required
 def ExerciseCreateView(request):
     if request.method == 'POST':
@@ -98,7 +102,7 @@ def ExerciseCreateView(request):
     return render(request, 'trainer/crear_ejercicio.html', {'form': form})
 
 
-
+# Vista para actualizar un ejercicio existente
 @login_required
 def ExerciseUpdateView(request, pk):
     ejercicio = get_object_or_404(TrainerExercise, id=ObjectId(pk))
@@ -116,6 +120,7 @@ def ExerciseUpdateView(request, pk):
 
     return render(request, 'trainer/crear_ejercicio.html', {'form': form, 'edit_mode': True})
 
+# Vista para gestionar horarios de rutinas
 @login_required
 def RoutineCreateUpdateView(request, pk=None):
     ejercicios = TrainerExercise.objects.all()
@@ -161,6 +166,7 @@ def RoutineCreateUpdateView(request, pk=None):
         'rutina': rutina
     })
 
+# Vista para eliminar ejercicios o rutinas
 @login_required
 def DeleteItemView(request, tipo, pk):
     if tipo == 'ejercicio':
@@ -186,6 +192,7 @@ def DeleteItemView(request, tipo, pk):
         'tipo': tipo
     })
 
+# Vista para gestionar horarios de rutinas
 @login_required
 def HorarioView(request):
     rutinas = TrainerRutina.objects.all()
@@ -258,6 +265,7 @@ def HorarioView(request):
         "rutinas": rutinas
     })
 
+# Vista para el panel de control
 @login_required
 def DashboardView(request):
     if request.method != 'GET':  # Asegura que solo acepte GET
