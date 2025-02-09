@@ -22,5 +22,7 @@ urlpatterns = [
     path('', include('gym_app.urls')),
     path('trainer/', include('trainer.urls', namespace='trainer')),
     path('gym_workouts/', include('gym_workouts.urls', namespace='gym_workouts')),
+    path('admin_gym/', include('admin_gym.urls', namespace='admin_gym')),
+    path('gerente/', include('gerente.urls', namespace='gerente')),
 
 ]

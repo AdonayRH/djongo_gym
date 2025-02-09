@@ -102,9 +102,9 @@ def user_login(request):
                         # Redirigir al dashboard del entrenador usando namespacae
                         return redirect('trainer:dashboard')  
                     elif user.role == 'admin':
-                        return redirect('admin_dashboard') 
+                        return redirect('admin_gym:user_list') 
                     elif user.role == 'director':
-                        return redirect('director_dashboard')
+                        return redirect('gerente:user_list')
                     else:
                         return redirect('home')  # Redirigir al dashboard del usuario normal
 

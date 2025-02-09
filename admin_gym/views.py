@@ -15,7 +15,7 @@ def is_admin(user):
 def user_list(request):
     """Lista de usuarios del gimnasio (solo visible para administradores)"""
     users = User.objects.all()
-    return render(request, 'admin/user_list.html', {'users': users})
+    return render(request, 'admin_gym/user_list.html', {'users': users})
 
 @login_required
 @user_passes_test(is_admin)
@@ -26,11 +26,11 @@ def create_user(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Usuario registrado exitosamente.")
-            return redirect('admin:user_list')
+            return redirect('admin_gym:user_list')
     else:
         form = AdminUserCreationForm()
 
-    return render(request, 'admin/create_user.html', {'form': form})
+    return render(request, 'admin_gym/create_user.html', {'form': form})
 
 @login_required
 @user_passes_test(is_admin)
@@ -43,11 +43,11 @@ def update_user(request, user_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Usuario actualizado correctamente.")
-            return redirect('admin:user_list')
+            return redirect('admin_gym:user_list')
     else:
         form = AdminUserUpdateForm(instance=user)
 
-    return render(request, 'admin/update_user.html', {'form': form, 'user': user})
+    return render(request, 'admin_gym/update_user.html', {'form': form, 'user': user})
 
 @login_required
 @user_passes_test(is_admin)
@@ -58,6 +58,6 @@ def delete_user(request, user_id):
     if request.method == 'POST':
         user.delete()
         messages.success(request, "Usuario eliminado correctamente.")
-        return redirect('admin:user_list')
+        return redirect('admin_gym:user_list')
 
-    return render(request, 'admin/delete_user.html', {'user': user})
+    return render(request, 'admin_gym/delete_user.html', {'user': user})

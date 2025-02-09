@@ -32,6 +32,18 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile' %}">Mi Perfil</a>
                         </li>
+                    {% elif user.role == "admin" %}
+                        <!-- Opciones del Administrador -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_gym:user_list' %}">Gestión de Usuarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_gym:create_user' %}">Añadir Usuario</a>
+                        </li>
+                    {% elif user.role == "admin" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'gerente:user_list' %}">Listado de Usuarios</a>
+                        </li>
                     {% endif %}
 
                     <!-- Logout SIEMPRE al final -->
